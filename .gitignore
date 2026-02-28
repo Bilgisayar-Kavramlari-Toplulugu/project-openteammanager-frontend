@@ -137,3 +137,9 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Next.js auto-generated types
+next-env.d.ts
+
+# Vercel
+.vercel
