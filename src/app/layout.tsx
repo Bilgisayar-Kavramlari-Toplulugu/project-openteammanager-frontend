@@ -18,13 +18,31 @@ export const metadata: Metadata = {
   description: "Open source team management platform",
 };
 
+/**
+ * Inline script to apply saved theme before first paint.
+ * Prevents flash of wrong theme on page load.
+ */
+const themeScript = `
+(function(){
+  try {
+    var t = localStorage.getItem('otm-theme');
+    if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  } catch(e) {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="tr" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

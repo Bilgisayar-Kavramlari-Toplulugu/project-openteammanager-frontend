@@ -1,12 +1,6 @@
 import apiClient from "./apiClient";
 import { ENDPOINTS, type EndpointKey } from "@/api/constants/endpoints";
-
-export interface ListResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-}
+import type { ListResponse } from "@/api/types/common.types";
 
 export default class CrudService<T> {
   private baseUrl: string;

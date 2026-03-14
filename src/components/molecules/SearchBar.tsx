@@ -1,8 +1,6 @@
 "use client";
 
-import { Input, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import ExampleButton from "@/components/atoms/ExampleButton";
 
 interface SearchBarProps {
   placeholder?: string;
@@ -10,17 +8,22 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({
-  placeholder = "Search...",
+  placeholder = "Ara...",
   onSearch,
 }: SearchBarProps) {
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSearch?.(e.target.value);
   };
 
   return (
-    <Space.Compact>
-      <Input placeholder={placeholder} onChange={handleSearch} />
-      <ExampleButton label="Search" icon={<SearchOutlined />} type="primary" />
-    </Space.Compact>
+    <div className="flex items-center gap-2 rounded-lg border border-divider bg-background px-3 py-1.5 transition-colors focus-within:border-primary">
+      <SearchOutlined className="text-muted" />
+      <input
+        type="text"
+        placeholder={placeholder}
+        onChange={handleChange}
+        className="w-32 border-none bg-transparent text-sm text-foreground outline-none placeholder:text-muted sm:w-48"
+      />
+    </div>
   );
 }

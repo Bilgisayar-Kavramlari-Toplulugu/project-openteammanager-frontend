@@ -1,9 +1,9 @@
 export interface User {
   id: string;
   email: string;
-  name: string;
-  avatar?: string;
-  role: "admin" | "member" | "viewer";
-  createdAt: string;
-  updatedAt: string;
+  username: string;
+  full_name: string;
+  avatar_url: string | null;
+  is_active: boolean;
+  is_verified: boolean;
 }
