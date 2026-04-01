@@ -20,6 +20,7 @@
 
 ## 📖 Hakkında
 
+OpenTeamManager Frontend, ekiplerin projelerini ve görevlerini yönetebileceği modern bir web uygulamasıdır. JWT tabanlı kimlik doğrulama, çoklu organizasyon desteği, proje yönetimi, sürükle-bırak Kanban board ve koyu/açık tema gibi özellikler sunar.
 
 **Temel Özellikler:**
 - Kimlik doğrulama (giriş/kayıt) ve otomatik token yenileme
