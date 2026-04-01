@@ -55,6 +55,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       await get().refreshSession();
       await get().fetchMe();
+
+      const { useOrganizationStore } = await import("@/store/organization.store");
+      await useOrganizationStore.getState().fetchOrganizations();
     } catch {
       get().clearSession();
     } finally {
@@ -67,6 +70,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ accessToken: res.data.access_token });
 
     await get().fetchMe();
+
+    const { useOrganizationStore } = await import("@/store/organization.store");
+    await useOrganizationStore.getState().fetchOrganizations();
   },
 
   register: async (payload) => {

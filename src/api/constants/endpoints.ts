@@ -5,6 +5,7 @@ export const ENDPOINTS = {
   auth: `${BASE}/auth`,
   users: `${BASE}/users`,
   teams: `${BASE}/teams`,
+  organizations: `${BASE}/organizations`,
 } as const;
 
 export type EndpointKey = keyof typeof ENDPOINTS;

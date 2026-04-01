@@ -8,13 +8,12 @@ import {
 } from "@ant-design/icons";
 import BrandMark from "@/components/atoms/BrandMark";
 import BrandLogo from "@/components/molecules/BrandLogo";
-import SidebarToggle from "@/components/atoms/SidebarToggle";
 import SidebarNavItem from "@/components/molecules/SidebarNavItem";
 import SidebarUserMenu from "@/components/molecules/SidebarUserMenu";
-import ThemeToggle from "@/components/atoms/ThemeToggle";
+import OrgSwitcher from "@/components/molecules/OrgSwitcher";
 import { useSidebarStore } from "@/store/sidebar.store";
 
-const navItems = [
+const mainNavItems = [
   {
     key: "dashboard",
     href: "/dashboard",
@@ -39,16 +38,15 @@ export default function AppSidebar() {
   const pathname = usePathname();
   const collapsed = useSidebarStore((s) => s.collapsed);
   const mobileOpen = useSidebarStore((s) => s.mobileOpen);
-  const toggle = useSidebarStore((s) => s.toggle);
   const setMobileOpen = useSidebarStore((s) => s.setMobileOpen);
 
   const sidebarContent = (
     <div className="flex h-full flex-col">
-      {/* Header: Logo + Toggle */}
+      {/* Header: Logo */}
       <div
         className={[
-          "flex h-16 shrink-0 items-center border-b border-divider px-4",
-          collapsed ? "justify-center" : "justify-between",
+          "flex h-16 shrink-0 items-center border-b border-divider/50 px-4",
+          collapsed ? "justify-center" : "",
         ].join(" ")}
       >
         {collapsed ? (
@@ -56,38 +54,38 @@ export default function AppSidebar() {
         ) : (
           <BrandLogo variant="themed" size="sm" />
         )}
-        <SidebarToggle
-          collapsed={collapsed}
-          onClick={toggle}
-          className={collapsed ? "hidden lg:inline-flex" : "hidden lg:inline-flex"}
-        />
+      </div>
+
+      {/* Org Switcher */}
+      <div className="shrink-0 border-b border-divider/50 px-3 py-3">
+        <OrgSwitcher collapsed={collapsed} />
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-        {navItems.map((item) => (
-          <SidebarNavItem
-            key={item.key}
-            href={item.href}
-            icon={item.icon}
-            label={item.label}
-            active={pathname.startsWith(item.href)}
-            collapsed={collapsed}
-            onClick={() => setMobileOpen(false)}
-          />
-        ))}
+      <nav className="flex-1 overflow-y-auto px-3 py-4">
+        {/* Section label */}
+        {!collapsed && (
+          <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-muted/60">
+            Menü
+          </p>
+        )}
+        <div className="space-y-0.5">
+          {mainNavItems.map((item) => (
+            <SidebarNavItem
+              key={item.key}
+              href={item.href}
+              icon={item.icon}
+              label={item.label}
+              active={pathname.startsWith(item.href)}
+              collapsed={collapsed}
+              onClick={() => setMobileOpen(false)}
+            />
+          ))}
+        </div>
       </nav>
 
-      {/* Footer: Theme + User */}
-      <div className="shrink-0 border-t border-divider px-3 py-4 space-y-1">
-        <div
-          className={[
-            "flex items-center rounded-lg px-3 py-2.5",
-            collapsed ? "justify-center" : "",
-          ].join(" ")}
-        >
-          <ThemeToggle />
-        </div>
+      {/* Footer: User */}
+      <div className="shrink-0 border-t border-divider/50 px-3 py-3">
         <SidebarUserMenu collapsed={collapsed} />
       </div>
     </div>
@@ -98,7 +96,7 @@ export default function AppSidebar() {
       {/* Desktop sidebar */}
       <aside
         className={[
-          "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 border-r border-divider bg-surface transition-all duration-300",
+          "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 border-r border-divider/50 bg-surface/80 backdrop-blur-xl transition-all duration-300",
           collapsed ? "lg:w-[72px]" : "lg:w-64",
         ].join(" ")}
       >
@@ -108,7 +106,7 @@ export default function AppSidebar() {
       {/* Mobile overlay backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -116,7 +114,7 @@ export default function AppSidebar() {
       {/* Mobile sidebar */}
       <aside
         className={[
-          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-divider bg-surface transition-transform duration-300 lg:hidden",
+          "fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-divider/50 bg-surface shadow-2xl transition-transform duration-300 lg:hidden",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
         ].join(" ")}
       >
