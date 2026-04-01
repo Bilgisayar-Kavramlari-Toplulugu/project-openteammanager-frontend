@@ -25,14 +25,23 @@ export default function SidebarNavItem({
       onClick={onClick}
       title={collapsed ? label : undefined}
       className={[
-        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+        "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
         collapsed ? "justify-center" : "",
         active
-          ? "bg-primary/10 font-medium text-primary"
-          : "text-muted hover:bg-primary/10 hover:text-primary",
+          ? "bg-primary/10 text-primary shadow-sm shadow-primary/5"
+          : "text-muted hover:bg-primary/5 hover:text-foreground",
       ].join(" ")}
     >
-      <span className="text-lg">{icon}</span>
+      {/* Active indicator */}
+      {active && (
+        <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-primary" />
+      )}
+      <span className={[
+        "text-lg transition-transform duration-200",
+        active ? "" : "group-hover:scale-110",
+      ].join(" ")}>
+        {icon}
+      </span>
       {!collapsed && <span>{label}</span>}
     </Link>
   );

@@ -20,43 +20,87 @@
 
 ## 📖 Hakkında
 
-<!-- Bu repository'nin ne yaptığını buraya yazın -->
+OpenTeamManager Frontend, ekiplerin projelerini ve görevlerini yönetebileceği modern bir web uygulamasıdır. JWT tabanlı kimlik doğrulama, çoklu organizasyon desteği, proje yönetimi, sürükle-bırak Kanban board ve koyu/açık tema gibi özellikler sunar.
+
+**Temel Özellikler:**
+- Kimlik doğrulama (giriş/kayıt) ve otomatik token yenileme
+- Organizasyon oluşturma ve yönetimi
+- Proje oluşturma, düzenleme, silme ve durum filtresi
+- Kanban Board ile görev yönetimi (sürükle-bırak, optimistic update)
+- Markdown destekli açıklama editörü
+- Koyu/Açık tema desteği
+- Responsive tasarım
+
+**Teknoloji Stack:**
+
+| Katman | Teknoloji |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| UI | React 19, Ant Design 6, Tailwind CSS 4 |
+| State | Zustand 5 |
+| Veri | TanStack Query 5 |
+| Sürükle-Bırak | dnd-kit |
+| Form | React Hook Form + Zod |
+| HTTP | Axios |
+| Dil | TypeScript 5 |
 
 ## 🚀 Kurulum
 
 ### Gereksinimler
 
-- Gerekli araçları buraya listeleyin
+- Node.js 18+
+- pnpm
 
 ### Başlangıç
 
 ```bash
 git clone https://github.com/Bilgisayar-Kavramlari-Toplulugu/project-openteammanager-frontend.git
 cd project-openteammanager-frontend
+pnpm install
+```
 
-# Kurulum adımlarını buraya ekleyin
+`.env.local` dosyası oluşturun:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ```
 
 ## 💻 Kullanım
 
 ```bash
-# Uygulamayı çalıştırma komutunu buraya ekleyin
+pnpm dev        # Geliştirme sunucusu (http://localhost:3000)
+pnpm build      # Üretim derlemesi
+pnpm start      # Üretim sunucusu
+pnpm lint       # ESLint kontrolü
 ```
 
 ## 📁 Proje Yapısı
 
 ```
 project-openteammanager-frontend/
-├── src/          # Kaynak kodlar
-├── tests/        # Testler
-├── docs/         # Dokümantasyon
-└── README.md     # Bu dosya
+├── src/
+│   ├── api/                  # API katmanı (servisler, tipler, axios istemci)
+│   ├── app/                  # Next.js App Router sayfaları
+│   │   ├── (auth)/           #   Giriş & Kayıt
+│   │   ├── dashboard/        #   Dashboard
+│   │   ├── projects/         #   Proje listesi
+│   │   │   └── [id]/         #   Proje detay (Genel Bakış, Kanban, Ekip)
+│   │   └── community/        #   Topluluk
+│   ├── components/           # Atomic Design bileşenleri
+│   │   ├── atoms/            #   FormInput, PrimaryButton, ThemeToggle...
+│   │   ├── molecules/        #   FormField, SearchBar, MarkdownEditor, OrgSwitcher...
+│   │   ├── organisms/        #   AppSidebar, TopBar, ProjectCard, KanbanBoard...
+│   │   └── templates/        #   MainLayout, ProtectedAppLayout, AuthLayout
+│   └── store/                # Zustand store'ları (auth, organization, theme, sidebar)
+├── docs/                     # Dokümantasyon
+└── README.md
 ```
 
 ## 🧪 Test
 
 ```bash
-# Test komutlarını buraya ekleyin
+pnpm lint       # ESLint kontrolü
+pnpm tsc --noEmit  # TypeScript tip kontrolü
 ```
 
 ## 🤝 Katkıda Bulunma
@@ -88,43 +132,87 @@ Bu proje MIT Lisansı ile lisanslanmıştır - detaylar için [LICENSE](LICENSE)
 
 ## 📖 About
 
-<!-- Describe what this repository does -->
+OpenTeamManager Frontend is a modern web application for teams to manage their projects and tasks. It features JWT-based authentication, multi-organization support, project management, drag-and-drop Kanban board, and dark/light theme support.
+
+**Key Features:**
+- Authentication (login/register) with automatic token refresh
+- Organization creation and management
+- Project creation, editing, deletion and status filtering
+- Kanban Board for task management (drag-and-drop, optimistic updates)
+- Markdown-supported description editor
+- Dark/Light theme support
+- Responsive design
+
+**Tech Stack:**
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| UI | React 19, Ant Design 6, Tailwind CSS 4 |
+| State | Zustand 5 |
+| Data | TanStack Query 5 |
+| Drag & Drop | dnd-kit |
+| Forms | React Hook Form + Zod |
+| HTTP | Axios |
+| Language | TypeScript 5 |
 
 ## 🚀 Installation
 
 ### Requirements
 
-- List required tools here
+- Node.js 18+
+- pnpm
 
 ### Getting Started
 
 ```bash
 git clone https://github.com/Bilgisayar-Kavramlari-Toplulugu/project-openteammanager-frontend.git
 cd project-openteammanager-frontend
+pnpm install
+```
 
-# Add installation steps here
+Create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ```
 
 ## 💻 Usage
 
 ```bash
-# Add command to run the application
+pnpm dev        # Development server (http://localhost:3000)
+pnpm build      # Production build
+pnpm start      # Production server
+pnpm lint       # ESLint check
 ```
 
 ## 📁 Project Structure
 
 ```
 project-openteammanager-frontend/
-├── src/          # Source code
-├── tests/        # Tests
-├── docs/         # Documentation
-└── README.md     # This file
+├── src/
+│   ├── api/                  # API layer (services, types, axios client)
+│   ├── app/                  # Next.js App Router pages
+│   │   ├── (auth)/           #   Login & Register
+│   │   ├── dashboard/        #   Dashboard
+│   │   ├── projects/         #   Project list
+│   │   │   └── [id]/         #   Project detail (Overview, Kanban, Team)
+│   │   └── community/        #   Community
+│   ├── components/           # Atomic Design components
+│   │   ├── atoms/            #   FormInput, PrimaryButton, ThemeToggle...
+│   │   ├── molecules/        #   FormField, SearchBar, MarkdownEditor, OrgSwitcher...
+│   │   ├── organisms/        #   AppSidebar, TopBar, ProjectCard, KanbanBoard...
+│   │   └── templates/        #   MainLayout, ProtectedAppLayout, AuthLayout
+│   └── store/                # Zustand stores (auth, organization, theme, sidebar)
+├── docs/                     # Documentation
+└── README.md
 ```
 
 ## 🧪 Testing
 
 ```bash
-# Add test commands here
+pnpm lint          # ESLint check
+pnpm tsc --noEmit  # TypeScript type check
 ```
 
 ## 🤝 Contributing

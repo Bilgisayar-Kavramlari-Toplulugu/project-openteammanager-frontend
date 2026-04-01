@@ -12,7 +12,7 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
       <input
         ref={ref}
         className={[
-          "w-full rounded-xl border bg-transparent px-4 py-3 text-sm text-foreground outline-none transition-all duration-200",
+          "w-full rounded-xl border bg-input px-4 py-3 text-sm text-foreground outline-none transition-all duration-200",
           "placeholder:text-muted/60",
           hasError
             ? "border-danger/60 focus:border-danger focus:ring-2 focus:ring-danger/20"
