@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Skeleton, message } from "antd";
+import { App, Skeleton } from "antd";
 import {
   useTaskComments,
   useCreateComment,
@@ -28,6 +28,7 @@ export default function TaskCommentsTab({
   currentUserId,
   isAdmin,
 }: TaskCommentsTabProps) {
+  const { message } = App.useApp();
   const commentsQuery = useTaskComments(projectId, taskId);
   const createMutation = useCreateComment(projectId, taskId);
   const updateMutation = useUpdateComment(projectId, taskId);

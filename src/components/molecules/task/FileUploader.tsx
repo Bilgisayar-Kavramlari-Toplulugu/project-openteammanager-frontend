@@ -8,7 +8,7 @@ import {
   type DragEvent,
 } from "react";
 import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
-import { message, Progress } from "antd";
+import { App, Progress } from "antd";
 import {
   formatFileSize,
   validateAttachment,
@@ -36,6 +36,7 @@ export default function FileUploader({
   multiple = true,
   disabled,
 }: FileUploaderProps) {
+  const { message } = App.useApp();
   const [items, setItems] = useState<UploadItem[]>([]);
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -70,7 +71,7 @@ export default function FileUploader({
         message.error(msg);
       }
     },
-    [onUpload],
+    [onUpload, message],
   );
 
   const handleFiles = (fileList: FileList | null) => {

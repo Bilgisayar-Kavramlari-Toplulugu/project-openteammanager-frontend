@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton, Tabs, message } from "antd";
+import { App, Skeleton, Tabs } from "antd";
 import { useAttachments } from "@/api/hooks/task/useAttachments";
 import {
   useUploadAttachment,
@@ -22,6 +22,7 @@ export default function TaskAttachmentsPanel({
   currentUserId,
   isAdmin,
 }: TaskAttachmentsPanelProps) {
+  const { message } = App.useApp();
   const taskAttachmentsQuery = useAttachments(projectId, taskId);
   const projectAttachmentsQuery = useAttachments(projectId, null);
 

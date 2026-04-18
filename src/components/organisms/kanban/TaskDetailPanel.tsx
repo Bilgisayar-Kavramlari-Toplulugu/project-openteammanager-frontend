@@ -93,11 +93,13 @@ export default function TaskDetailPanel({
       open={open}
       onClose={onClose}
       placement="right"
-      width={drawerWidth}
       closeIcon={<CloseOutlined />}
       title={header}
       destroyOnHidden
-      styles={{ body: { padding: 0 } }}
+      styles={{
+        body: { padding: 0 },
+        wrapper: { width: drawerWidth },
+      }}
     >
       {taskQuery.isLoading && <TaskPanelSkeleton />}
 
