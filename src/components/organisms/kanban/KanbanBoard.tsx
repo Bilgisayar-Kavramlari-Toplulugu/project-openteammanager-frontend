@@ -13,16 +13,17 @@ import {
   type DragOverEvent,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { taskService } from "@/api/services/task.service";
-import { useOrganizationStore } from "@/store/organization.store";
+import { useTasks } from "@/api/hooks/task/useTasks";
+import { useMoveTask } from "@/api/hooks/task/useTaskMutations";
+import { taskKeys } from "@/api/queryKeys";
 import type { Task, TaskStatus } from "@/api/types/task.types";
 import KanbanColumn from "./KanbanColumn";
 import KanbanCard from "./KanbanCard";
 import KanbanFilters from "./KanbanFilters";
 import CreateTaskModal from "./CreateTaskModal";
-import TaskDetailModal from "./TaskDetailModal";
+import TaskDetailPanel from "./TaskDetailPanel";
 
 const COLUMNS: TaskStatus[] = ["todo", "in_progress", "in_review", "done"];
 
@@ -35,7 +36,6 @@ export default function KanbanBoard({
   projectId,
   projectKey,
 }: KanbanBoardProps) {
-  const activeOrg = useOrganizationStore((s) => s.activeOrg);
   const queryClient = useQueryClient();
 
   const [filterAssignee, setFilterAssignee] = useState<string | undefined>();
@@ -53,14 +53,7 @@ export default function KanbanBoard({
     return p;
   }, [filterAssignee, filterLabel]);
 
-  const { data: tasks = [] } = useQuery({
-    queryKey: ["tasks", projectId, queryParams],
-    queryFn: () =>
-      taskService
-        .list(activeOrg!.id, projectId, queryParams)
-        .then((r) => r.data),
-    enabled: !!activeOrg,
-  });
+  const { data: tasks = [] } = useTasks(projectId, queryParams);
 
   const allLabels = useMemo(() => {
     const set = new Set<string>();
@@ -94,22 +87,7 @@ export default function KanbanBoard({
     return grouped;
   }, [tasks]);
 
-  const moveMutation = useMutation({
-    mutationFn: ({
-      taskId,
-      status,
-      position,
-    }: {
-      taskId: string;
-      status: TaskStatus;
-      position: number;
-    }) => taskService.move(activeOrg!.id, projectId, taskId, { status, position }),
-    onError: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["tasks", projectId],
-      });
-    },
-  });
+  const moveMutation = useMoveTask(projectId);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -154,13 +132,16 @@ export default function KanbanBoard({
         const position = calculatePosition(reordered, overIdx);
 
         queryClient.setQueryData(
-          ["tasks", projectId, queryParams],
+          taskKeys.list(projectId, queryParams),
           (old: Task[] | undefined) =>
             old?.map((t) =>
               t.id === taskId ? { ...t, position, status: targetStatus } : t,
             ),
         );
-        moveMutation.mutate({ taskId, status: targetStatus, position });
+        moveMutation.mutate({
+          taskId,
+          data: { status: targetStatus, position },
+        });
       } else {
         const insertIdx = COLUMNS.includes(over.id as TaskStatus)
           ? targetTasks.length
@@ -171,7 +152,7 @@ export default function KanbanBoard({
         );
 
         queryClient.setQueryData(
-          ["tasks", projectId, queryParams],
+          taskKeys.list(projectId, queryParams),
           (old: Task[] | undefined) =>
             old?.map((t) =>
               t.id === taskId
@@ -179,7 +160,10 @@ export default function KanbanBoard({
                 : t,
             ),
         );
-        moveMutation.mutate({ taskId, status: targetStatus, position });
+        moveMutation.mutate({
+          taskId,
+          data: { status: targetStatus, position },
+        });
       }
     },
     [tasks, tasksByStatus, queryClient, projectId, queryParams, moveMutation],
@@ -205,7 +189,7 @@ export default function KanbanBoard({
 
       if (task.status !== overStatus) {
         queryClient.setQueryData(
-          ["tasks", projectId, queryParams],
+          taskKeys.list(projectId, queryParams),
           (old: Task[] | undefined) =>
             old?.map((t) =>
               t.id === taskId ? { ...t, status: overStatus } : t,
@@ -272,10 +256,10 @@ export default function KanbanBoard({
         />
       )}
 
-      {/* Task Detail / Edit / Delete Modal */}
+      {/* Task Detail Panel (Sheet/Drawer) */}
       {selectedTask && (
-        <TaskDetailModal
-          task={selectedTask}
+        <TaskDetailPanel
+          taskId={selectedTask.id}
           projectId={projectId}
           projectKey={projectKey}
           open={!!selectedTask}

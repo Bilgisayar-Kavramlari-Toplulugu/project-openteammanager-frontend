@@ -2,38 +2,10 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  UserOutlined,
-  CalendarOutlined,
-  FlagOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, CalendarOutlined } from "@ant-design/icons";
+import TaskIdBadge from "@/components/atoms/TaskIdBadge";
+import PriorityBadge from "@/components/atoms/PriorityBadge";
 import type { Task } from "@/api/types/task.types";
-
-const priorityConfig: Record<
-  Task["priority"],
-  { label: string; color: string; bg: string }
-> = {
-  urgent: {
-    label: "Acil",
-    color: "text-red-700 dark:text-red-400",
-    bg: "bg-red-50 dark:bg-red-500/10",
-  },
-  high: {
-    label: "Yüksek",
-    color: "text-orange-700 dark:text-orange-400",
-    bg: "bg-orange-50 dark:bg-orange-500/10",
-  },
-  medium: {
-    label: "Orta",
-    color: "text-blue-700 dark:text-blue-400",
-    bg: "bg-blue-50 dark:bg-blue-500/10",
-  },
-  low: {
-    label: "Düşük",
-    color: "text-gray-600 dark:text-gray-400",
-    bg: "bg-gray-50 dark:bg-gray-500/15",
-  },
-};
 
 interface KanbanCardProps {
   task: Task;
@@ -41,7 +13,11 @@ interface KanbanCardProps {
   onClick?: (task: Task) => void;
 }
 
-export default function KanbanCard({ task, projectKey, onClick }: KanbanCardProps) {
+export default function KanbanCard({
+  task,
+  projectKey,
+  onClick,
+}: KanbanCardProps) {
   const {
     attributes,
     listeners,
@@ -56,10 +32,7 @@ export default function KanbanCard({ task, projectKey, onClick }: KanbanCardProp
     transition,
   };
 
-  const priority = priorityConfig[task.priority];
-
   const handleClick = (e: React.MouseEvent) => {
-    // Only open detail if it wasn't a drag
     if (!isDragging && onClick) {
       e.stopPropagation();
       onClick(task);
@@ -80,17 +53,16 @@ export default function KanbanCard({ task, projectKey, onClick }: KanbanCardProp
           : "hover:shadow-md",
       ].join(" ")}
     >
-      {/* Task code */}
-      <span className="mb-1.5 inline-block font-mono text-[11px] text-muted">
-        {projectKey}-{task.task_number}
-      </span>
+      <TaskIdBadge
+        projectKey={projectKey}
+        taskNumber={task.task_number}
+        className="mb-1.5 bg-transparent p-0 text-muted"
+      />
 
-      {/* Title */}
       <h4 className="mb-2 text-sm font-medium text-foreground leading-snug">
         {task.title}
       </h4>
 
-      {/* Labels */}
       {task.labels && task.labels.length > 0 && (
         <div className="mb-2 flex flex-wrap gap-1">
           {task.labels.map((label) => (
@@ -104,14 +76,8 @@ export default function KanbanCard({ task, projectKey, onClick }: KanbanCardProp
         </div>
       )}
 
-      {/* Footer */}
       <div className="flex items-center justify-between gap-2">
-        <span
-          className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${priority.color} ${priority.bg}`}
-        >
-          <FlagOutlined className="text-[9px]" />
-          {priority.label}
-        </span>
+        <PriorityBadge priority={task.priority} size="sm" />
 
         <div className="flex items-center gap-2">
           {task.due_date && (
