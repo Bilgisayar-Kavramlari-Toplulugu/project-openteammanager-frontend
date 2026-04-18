@@ -9,6 +9,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 import { taskService } from "@/api/services/task.service";
+import { taskKeys } from "@/api/queryKeys";
+import { priorityOptions, typeOptions } from "@/api/constants/task";
 import { useOrganizationStore } from "@/store/organization.store";
 import FormInput from "@/components/atoms/FormInput";
 import FormField from "@/components/molecules/FormField";
@@ -22,20 +24,6 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
-
-const priorityOptions = [
-  { label: "Düşük", value: "low" },
-  { label: "Orta", value: "medium" },
-  { label: "Yüksek", value: "high" },
-  { label: "Acil", value: "urgent" },
-];
-
-const typeOptions = [
-  { label: "Görev", value: "task" },
-  { label: "Bug", value: "bug" },
-  { label: "Özellik", value: "feature" },
-  { label: "Epic", value: "epic" },
-];
 
 interface CreateTaskModalProps {
   projectId: string;
@@ -77,14 +65,14 @@ export default function CreateTaskModal({
         title: data.title,
         description: data.description || undefined,
         status: defaultStatus,
-        priority: priority as "low" | "medium" | "high" | "urgent",
+        priority: priority as "low" | "medium" | "high" | "critical",
         task_type: taskType as "task" | "bug" | "feature" | "epic",
         labels: labels.length > 0 ? labels : undefined,
         due_date: dueDate,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks", projectId] });
+      queryClient.invalidateQueries({ queryKey: taskKeys.list(projectId) });
       handleClose();
     },
     onError: (err) => {

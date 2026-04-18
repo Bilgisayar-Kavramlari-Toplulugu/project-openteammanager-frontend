@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ConfigProvider, theme as antdTheme } from "antd";
+import { App as AntdApp, ConfigProvider, theme as antdTheme } from "antd";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthInitializer from "@/components/atoms/AuthInitializer";
@@ -115,8 +115,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           },
         }}
       >
-        <AuthInitializer />
-        {children}
+        <AntdApp>
+          <AuthInitializer />
+          {children}
+        </AntdApp>
       </ConfigProvider>
     </QueryClientProvider>
   );
