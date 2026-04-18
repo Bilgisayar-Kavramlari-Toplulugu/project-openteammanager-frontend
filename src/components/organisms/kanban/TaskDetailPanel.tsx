@@ -9,10 +9,6 @@ import { useAuthStore } from "@/store/auth.store";
 import { useTaskDetail } from "@/api/hooks/task/useTaskDetail";
 import { useSubtasks } from "@/api/hooks/task/useSubtasks";
 import {
-  useTaskComments,
-  useCreateComment,
-} from "@/api/hooks/task/useTaskComments";
-import {
   useUpdateTask,
   useDeleteTask,
   useCreateSubtask,
@@ -46,14 +42,20 @@ export default function TaskDetailPanel({
   const taskQuery = useTaskDetail(projectId, taskId, open);
   const membersQuery = useProjectMembers(projectId, open);
   const subtasksQuery = useSubtasks(projectId, taskId, open);
-  const commentsQuery = useTaskComments(projectId, taskId, open);
 
   const task = taskQuery.data;
 
   const updateMutation = useUpdateTask(projectId, taskId);
   const deleteMutation = useDeleteTask(projectId, taskId);
   const createSubtaskMutation = useCreateSubtask(projectId, taskId);
-  const createCommentMutation = useCreateComment(projectId, taskId);
+
+  // Admin = proje manager'ı veya görev reporter'ı (yaratıcı)
+  const currentMember = membersQuery.data?.find(
+    (m) => m.user_id === currentUser?.id,
+  );
+  const isAdmin =
+    currentMember?.role === "manager" ||
+    (!!task && task.reporter_id === currentUser?.id);
 
   const handleApiError = (err: unknown, fallback: string) => {
     if (axios.isAxiosError(err)) {
@@ -117,9 +119,9 @@ export default function TaskDetailPanel({
             error={error}
             subtasks={subtasksQuery.data}
             subtasksLoading={subtasksQuery.isLoading}
-            comments={commentsQuery.data?.items}
-            commentsTotal={commentsQuery.data?.total ?? 0}
-            commentsLoading={commentsQuery.isLoading}
+            members={membersQuery.data || []}
+            currentUserId={currentUser?.id}
+            isAdmin={isAdmin}
             onDescriptionSave={(description) => patchTask({ description })}
             onCreateSubtask={(title) =>
               createSubtaskMutation.mutate(title, {
@@ -128,13 +130,6 @@ export default function TaskDetailPanel({
               })
             }
             createSubtaskPending={createSubtaskMutation.isPending}
-            onCreateComment={(content) =>
-              createCommentMutation.mutate(content, {
-                onError: (err) =>
-                  handleApiError(err, "Yorum gönderilemedi."),
-              })
-            }
-            createCommentPending={createCommentMutation.isPending}
           />
 
           <TaskDetailMetaSidebar
