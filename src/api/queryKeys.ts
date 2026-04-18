@@ -18,3 +18,11 @@ export const projectKeys = {
   members: (projectId: string) =>
     [...projectKeys.detail(projectId), "members"] as const,
 };
+
+export const attachmentKeys = {
+  all: ["attachments"] as const,
+  byProject: (projectId: string) =>
+    [...attachmentKeys.all, projectId] as const,
+  byTask: (projectId: string, taskId: string) =>
+    [...attachmentKeys.byProject(projectId), "task", taskId] as const,
+};
